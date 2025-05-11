@@ -1,0 +1,7 @@
+streamlit
+gspread
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+pandas
+# nltk # Optional, for more advanced stop word removal. Included a basic list in the script.

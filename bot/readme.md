@@ -1,5 +1,13 @@
 # CNJDS Meetup Bot
 
+![Bot homepage](https://github.com/vrangayyan6/GenAI/blob/main/bot/bot_homepage.png)
+
+
+![Bot - Provide info from past meetups](https://github.com/vrangayyan6/GenAI/blob/main/bot/bot_past_meetups.png)
+
+
+![Bot - Present in upcoming meetup](https://github.com/vrangayyan6/GenAI/blob/main/bot/bot_present.png)
+
 ### Prompt to Gemini 2.5 Pro (preview) \-
 
 Requirements:  

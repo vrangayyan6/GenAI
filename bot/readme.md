@@ -8,9 +8,9 @@ a. The bot must start by displaying the greeting "Hi, what is your name?".
 b. The bot must request for email address of the user.  
 c. The bot must display the following message:  
 "Hello \<name of user\>, Welcome to the Central NJ Data Science Meetup\!   
-1\. Do you need information on a topic covered in past meetups?  
-2\. Do you need information on the next meetup?  
-3\. Do you want to present in upcoming meetup?"  
+1. Do you need information on a topic covered in past meetups?  
+2. Do you need information on the next meetup?  
+3. Do you want to present in upcoming meetup?"  
 d. If user requests information on a topic covered in past meetup, the bot must provide results with following fields: "Presentation title", "Synopsis", "Presenter", "Month/Year".  Presentation title must link to the PDF file in Google Drive.  
 e. If user requests information on next meetup, the bot must provide results with following fields: "Presentation title", "Synopsis", "Presenter".  
 f. If user wants to present in upcoming meetup, the bot must display message "Thank you for your interest in presenting in upcoming meetup\!  We will contact you shortly by email for further details."  
@@ -163,9 +163,9 @@ This design balances ease of use, low cost, and the ability to meet all requirem
 
 Bot displays:  
  Hello \<name\>, Welcome to the Central NJ Data Science Meetup\!  
-1\. Do you need information on a topic covered in past meetups?  
-2\. Do you need information on the next meetup?  
-3\. Do you want to present in upcoming meetup?  
+1. Do you need information on a topic covered in past meetups?  
+2. Do you need information on the next meetup?  
+3. Do you want to present in upcoming meetup?  
 Please enter the number of your choice (1, 2, or 3).
 
 *   
@@ -270,7 +270,7 @@ Once I have your responses, I can refine the proposed options and solution desig
 
 ### Prompt \- 
 
-1\.  Data Storage for Past Meetups:  
+1.  Data Storage for Past Meetups:  
     \* Where is the information about past meetups (presentation title, synopsis, presenter, month/year, PDF link) currently stored? (e.g., Google Sheets, CSV file, a simple database, website content, etc.)  
     Recommend input method needed.  
     \* If PDF links are used, are these direct URLs to the files in Google Drive (or another cloud storage)? Are these files set to "anyone with the link can view"?  
@@ -278,35 +278,35 @@ Once I have your responses, I can refine the proposed options and solution desig
     \* How frequently is this past meetup data updated (e.g., after every meetup, monthly)?  
     Past meetup data is updated monthly after every meetup.
 
-2\.  Data Storage for Next Meetup:  
+2.  Data Storage for Next Meetup:  
     \* Where is the information about the \*next\* meetup (presentation title, synopsis, presenter) currently stored or how is it typically managed before a meetup? (e.g., a specific section on a website, a shared document, manually entered by an admin when available)  
     Recommend input method needed  
     \* How is this information updated, and by whom?  
     Recommend input method needed that can be performed by the Meetup founder.
 
-3\.  User Interaction Medium:  
+3.  User Interaction Medium:  
     \* How do you envision users interacting with this bot? (e.g., a simple page on your existing website, a dedicated chatbot interface, an integration into a messaging platform like Slack or Discord if your meetup uses one, or something else?)  
     Please suggest cheapest option.  
     \* Does the non-profit organization already use any specific platforms where this bot could ideally be integrated (e.g., a WordPress website, Google Workspace, Microsoft Teams)?  
     No  
 	  
-4\.  Scalability and User Volume:  
+4.  Scalability and User Volume:  
     \* Approximately how many users do you expect to interact with the bot per month?  
     50 users  
     \* Roughly how many past meetups worth of data do you have or anticipate having?  
     We have completed 100 meetups.
 
-5\.  Technical Expertise:  
+5.  Technical Expertise:  
     \* What is the level of technical expertise available within the non-profit for initial setup and ongoing maintenance or updates of the bot and its data? (e.g., volunteers with Python experience, general tech-savviness but no coding, limited technical resources)  
     Volunteers with Python experience of varying levels.
 
-6\.  "Low Cost" Definition:  
+6.  "Low Cost" Definition:  
     \* When you say "low cost," are we primarily aiming for zero to minimal software/hosting subscription costs, or is there a small budget available?  
     Zero to minimal cost.  
     \* Are there any existing subscriptions or services the non-profit already pays for that could be leveraged (e.g., Google Workspace paid tier, web hosting plan with certain features)?  
     No
 
-7\.  Search Capability for Past Meetups:  
+7.  Search Capability for Past Meetups:  
     \* For requirement 'd' (information on a topic covered in past meetups), how should users specify the topic?  
         \* Should the bot perform a keyword search across "Presentation title" and "Synopsis"?  
         Yes  
@@ -315,7 +315,7 @@ Once I have your responses, I can refine the proposed options and solution desig
         \* Is there a need for more advanced search (e.g., searching by presenter name)?  
         Yes
 
-8\.  Natural Language Understanding (NLU):  
+8.  Natural Language Understanding (NLU):  
     \* For interacting with the main menu options (1, 2, 3), is selecting a number sufficient, or should the bot understand phrases like "I want to know about old talks" or "Can I present something?"  
     Please recommend.  
     \* For searching past topics, would users type keywords like "machine learning," or full questions like "What meetups did you have about machine learning?"  
@@ -332,7 +332,7 @@ Based on your responses, here's a refined recommendation:
 
 Here's a breakdown of why and how, along with specific recommendations for your open points:
 
-**1\. Data Storage for Past Meetups:**
+**1. Data Storage for Past Meetups:**
 
 * **Current State:** No existing digital store; input method needed. PDF links are direct and public. Data updated monthly.  
 * **Recommendation:** **Google Sheets.**  
@@ -350,7 +350,7 @@ Here's a breakdown of why and how, along with specific recommendations for your 
     * Easily accessible via Python (`gspread` library).  
     * Handles 100+ meetups well.
 
-**2\. Data Storage for Next Meetup:**
+**2. Data Storage for Next Meetup:**
 
 * **Current State:** Input method needed, to be updated by the Meetup founder.  
 * **Recommendation:** **Google Sheets (same spreadsheet, different sheet/tab).**  
@@ -362,7 +362,7 @@ Here's a breakdown of why and how, along with specific recommendations for your 
   * **Input Method:** Direct manual entry into this specific Google Sheet by the Meetup founder. When information for a new meetup is confirmed, the founder updates this single sheet. It might only ever contain one row (for the immediately next meetup) or a few upcoming ones if planned.  
   * **Why Google Sheets:** Same reasons as above – simplicity, free, and ease of update for the founder.
 
-**3\. User Interaction Medium:**
+**3. User Interaction Medium:**
 
 * **Current State:** Cheapest option requested; no existing platforms to integrate with.  
 * **Recommendation:** **Streamlit Web Application.**  
@@ -375,14 +375,14 @@ Here's a breakdown of why and how, along with specific recommendations for your 
     * **User Experience:** Provides a clean web interface that users can access via a URL.  
   * **Alternative (Slightly more complex/costly if not using free tiers aggressively):** A basic Flask application. Streamlit is generally faster to develop for this kind of UI.
 
-**4\. Scalability and User Volume:**
+**4. Scalability and User Volume:**
 
 * **Current State:** 50 users/month, 100 past meetups.  
 * **Compatibility with Recommendation:**  
   * **Google Sheets:** Can handle this volume of data and read requests without issue, especially with efficient querying.  
   * **Streamlit (hosted on Streamlit Community Cloud or similar free/low-tier options):** Sufficient for 50 users/month. These platforms are designed for applications with this level of traffic.
 
-**5\. Technical Expertise:**
+**5. Technical Expertise:**
 
 * **Current State:** Volunteers with Python experience of varying levels.  
 * **Compatibility with Recommendation:**  
@@ -391,7 +391,7 @@ Here's a breakdown of why and how, along with specific recommendations for your 
   * **`gspread` library (for Google Sheets):** Well-documented and straightforward to use.  
   * This setup is well within the capabilities of volunteers with Python skills.
 
-**6\. "Low Cost" Definition:**
+**6. "Low Cost" Definition:**
 
 * **Current State:** Zero to minimal software/hosting subscription costs. No existing paid services.  
 * **Compatibility with Recommendation:**  
@@ -400,7 +400,7 @@ Here's a breakdown of why and how, along with specific recommendations for your 
   * **Hosting (Streamlit Community Cloud):** Free.  
   * This aligns perfectly with the "zero to minimal cost" requirement.
 
-**7\. Search Capability for Past Meetups:**
+**7. Search Capability for Past Meetups:**
 
 * **Current State:** Keyword search on "Presentation Title" and "Synopsis" is YES. Search by "Presenter" is YES. Browse/listing is NO.  
 * **Implementation with Recommendation:**  
@@ -410,7 +410,7 @@ Here's a breakdown of why and how, along with specific recommendations for your 
     * For presenter search, it will check if the terms appear (case-insensitive) in the 'Presenter' column.  
     * You might consider a simple input field for keywords and perhaps a separate optional field or checkbox if they want to specify that the keyword *is* a presenter name, or the bot could try to infer or search across all three fields if a single search box is preferred. For simplicity, one search box that checks all three fields might be easiest to start.
 
-**8\. Natural Language Understanding (NLU):**
+**8. Natural Language Understanding (NLU):**
 
 * **Current State:** Recommendation requested for menu interaction. For topic search, users may type keywords or full questions.  
 * **Recommendation (Balancing cost/complexity):**  
@@ -607,20 +607,20 @@ I need to structure the `app.py` clearly with comments.
 
 Example of how secrets would be structured in `.streamlit/secrets.toml`:
 
-Ini, TOML  
-\[google\_service\_account\]  
-type \= "service\_account"  
-project\_id \= "your-project-id"  
-private\_key\_id \= "your-private-key-id"  
-private\_key \= "-----BEGIN PRIVATE KEY-----\\nYOUR\_PRIVATE\_KEY\\n-----END PRIVATE KEY-----\\n"  
-client\_email \= "your-service-account-email@your-project-id.iam.gserviceaccount.com"  
-client\_id \= "your-client-id"  
-auth\_uri \= "https://accounts.google.com/o/oauth2/auth"  
-token\_uri \= "https://oauth2.googleapis.com/token"  
-auth\_provider\_x509\_cert\_url \= "https://www.googleapis.com/oauth2/v1/certs"  
-client\_x509\_cert\_url \= "https://www.googleapis.com/robot/v1/metadata/x509/your-service-account-email%40your-project-id.iam.gserviceaccount.com"  
-universe\_domain \= "googleapis.com"
-
+```Ini, TOML  
+[google_service_account]  
+type = "service_account"  
+project_id = "your-project-id"  
+private_key_id = "your-private-key-id"  
+private_key = "-----BEGIN PRIVATE KEY-----\nYOUR_PRIVATE_KEY\n-----END PRIVATE KEY-----\n"  
+client_email = "your-service-account-email@your-project-id.iam.gserviceaccount.com"  
+client_id = "your-client-id"  
+auth_uri = "https://accounts.google.com/o/oauth2/auth"  
+token_uri = "https://oauth2.googleapis.com/token"  
+auth_provider_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs"  
+client_x509_cert_url = "https://www.googleapis.com/robot/v1/metadata/x509/your-service-account-email%40your-project-id.iam.gserviceaccount.com"  
+universe_domain = "googleapis.com"
+```
 The Python script will then access this using `st.secrets["google_service_account"]`.
 
 Let's start coding the `app.py` structure. I'll make sure the PDF links are displayed as actual clickable links using `st.markdown`. The search for past meetups should search title, synopsis, and presenter. The timestamp for presenter interest will use `datetime.datetime.now()`.
@@ -631,85 +631,85 @@ Let's start coding the `app.py` structure. I'll make sure the PDF links are disp
 
 Okay, I will provide the Python script \`app.py\` for the Streamlit application and the corresponding \`requirements.txt\` file.
 
-\*\*Important Setup Steps Before Running \`app.py\`:\*\*
+**Important Setup Steps Before Running \`app.py\`:**
 
-1\.  \*\*Google Sheets:\*\*  
-    \* Ensure you have a Google Sheet with three tabs (sheets) named exactly:  
-        \* \`Past\_Meetups\` (Columns: \`ID\`, \`Presentation Title\`, \`Synopsis\`, \`Presenter\`, \`Month/Year\`, \`PDF\_Link\`)  
-        \* \`Next\_Meetup\` (Columns: \`Presentation Title\`, \`Synopsis\`, \`Presenter\`)  
-        \* \`Presenter\_Interest\` (Columns: \`Timestamp\`, \`Name\`, \`Email\`)  
-    \* Populate \`Past\_Meetups\` and \`Next\_Meetup\` with some data to test.
+1.  **Google Sheets:**  
+    * Ensure you have a Google Sheet with three tabs (sheets) named exactly:  
+        * \`Past\_Meetups\` (Columns: \`ID\`, \`Presentation Title\`, \`Synopsis\`, \`Presenter\`, \`Month/Year\`, \`PDF\_Link\`)  
+        * \`Next\_Meetup\` (Columns: \`Presentation Title\`, \`Synopsis\`, \`Presenter\`)  
+        * \`Presenter\_Interest\` (Columns: \`Timestamp\`, \`Name\`, \`Email\`)  
+    * Populate \`Past\_Meetups\` and \`Next\_Meetup\` with some data to test.
 
-2\.  \*\*Google Service Account:\*\*  
-    \* Create a Google Service Account in the Google Cloud Console.  
-    \* Enable the \*\*Google Sheets API\*\* and \*\*Google Drive API\*\* for your project.  
-    \* Download the JSON credentials file for this service account.  
-    \* Share your Google Sheet with the service account's email address, giving it "Editor" permissions.
+2.  **Google Service Account:**  
+    * Create a Google Service Account in the Google Cloud Console.  
+    * Enable the **Google Sheets API** and **Google Drive API** for your project.  
+    * Download the JSON credentials file for this service account.  
+    * Share your Google Sheet with the service account's email address, giving it "Editor" permissions.
 
-3\.  \*\*Streamlit Secrets:\*\*  
-    \* Create a file named \`secrets.toml\` in a directory named \`.streamlit\` within your project folder (i.e., \`.streamlit/secrets.toml\`).  
-    \* Paste the content of your downloaded Google Service Account JSON key into \`secrets.toml\` like this:
+3.  **Streamlit Secrets:**  
+    * Create a file named \`secrets.toml\` in a directory named \`.streamlit\` within your project folder (i.e., \`.streamlit/secrets.toml\`).  
+    * Paste the content of your downloaded Google Service Account JSON key into \`secrets.toml\` like this:
 
-        \`\`\`toml  
-        \# .streamlit/secrets.toml
+```toml  
+# .streamlit/secrets.toml
 
-        \[google\_service\_account\]  
-        type \= "service\_account"  
-        project\_id \= "your-google-cloud-project-id"  
-        private\_key\_id \= "your-private-key-id"  
-        private\_key \= "-----BEGIN PRIVATE KEY-----\\nYOUR\_ACTUAL\_PRIVATE\_KEY\_CONTENT\_HERE\\n-----END PRIVATE KEY-----\\n"  
-        client\_email \= "your-service-account-email@your-project-id.iam.gserviceaccount.com"  
-        client\_id \= "your-client-id"  
-        auth\_uri \= "https://accounts.google.com/o/oauth2/auth"  
-        token\_uri \= "https://oauth2.googleapis.com/token"  
-        auth\_provider\_x509\_cert\_url \= "https://www.googleapis.com/oauth2/v1/certs"  
-        client\_x509\_cert\_url \= "https://www.googleapis.com/robot/v1/metadata/x509/your-service-account-email%40your-project-id.iam.gserviceaccount.com"  
-        \# Ensure 'universe\_domain' is included if present in your JSON key, common for newer keys  
-        \# universe\_domain \= "googleapis.com"  
-        \`\`\`  
-        \*\*Replace the placeholder values with the actual values from your JSON credentials file.\*\* The \`private\_key\` needs to have the newline characters \`\\n\` preserved.
+[google_service_account]  
+type = "service_account"  
+project_id = "your-google-cloud-project-id"  
+private_key_id = "your-private-key-id"  
+private_key = "-----BEGIN PRIVATE KEY-----\nYOUR_ACTUAL_PRIVATE_KEY_CONTENT_HERE\n-----END PRIVATE KEY-----\n"  
+client_email = "your-service-account-email@your-project-id.iam.gserviceaccount.com"  
+client_id = "your-client-id"  
+auth_uri = "https://accounts.google.com/o/oauth2/auth"  
+token_uri = "https://oauth2.googleapis.com/token"  
+auth_provider_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs"  
+client_x509_cert_url = "https://www.googleapis.com/robot/v1/metadata/x509/your-service-account-email%40your-project-id.iam.gserviceaccount.com"  
+# Ensure 'universe_domain' is included if present in your JSON key, common for newer keys  
+# universe_domain = "googleapis.com"  
+```  
+**Replace the placeholder values with the actual values from your JSON credentials file.** The `private_key` needs to have the newline characters `\n` preserved.
 
 \---
 
-\*\*\`requirements.txt\`:\*\*
+**\`requirements.txt\`:**
 
-\`\`\`text  
+```text  
 streamlit  
 gspread  
 google-auth  
 google-auth-oauthlib  
 google-auth-httplib2  
 pandas  
-\# nltk \# Optional, for more advanced stop word removal. Included a basic list in the script.  
-\`\`\`
+# nltk # Optional, for more advanced stop word removal. Included a basic list in the script.  
+```
 
 \---
 
-\*\*\`app.py\`:\*\*
+**\`app.py\`:**
 
-\`\`\`python  
+```python  
 import streamlit as st  
 import gspread  
-from google.oauth2.service\_account import Credentials  
+from google.oauth2.service_account import Credentials  
 import pandas as pd  
 import datetime
 
-\# \--- Configuration and Constants \---  
-SHEET\_NAME\_PAST\_MEETUPS \= "Past\_Meetups"  
-SHEET\_NAME\_NEXT\_MEETUP \= "Next\_Meetup"  
-SHEET\_NAME\_PRESENTER\_INTEREST \= "Presenter\_Interest"
+# --- Configuration and Constants ---  
+SHEET_NAME_PAST_MEETUPS = "Past_Meetups"  
+SHEET_NAME_NEXT_MEETUP = "Next_Meetup"  
+SHEET_NAME_PRESENTER_INTEREST = "Presenter_Interest"
 
-\# Basic list of stop words for simple query cleaning  
-\# For more advanced stop word removal, consider using NLTK:  
-\# from nltk.corpus import stopwords  
-\# import nltk  
-\# try:  
-\#     STOP\_WORDS \= set(stopwords.words('english'))  
-\# except LookupError:  
-\#     nltk.download('stopwords')  
-\#     STOP\_WORDS \= set(stopwords.words('english'))  
-\# For simplicity, using a predefined list here:  
-STOP\_WORDS \= {  
+# Basic list of stop words for simple query cleaning  
+# For more advanced stop word removal, consider using NLTK:  
+# from nltk.corpus import stopwords  
+# import nltk  
+# try:  
+#     STOP_WORDS = set(stopwords.words('english'))  
+# except LookupError:  
+#     nltk.download('stopwords')  
+#     STOP_WORDS = set(stopwords.words('english'))  
+# For simplicity, using a predefined list here:  
+STOP_WORDS = {  
     'a', 'an', 'the', 'is', 'are', 'was', 'were', 'be', 'been', 'being',  
     'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'should',  
     'can', 'could', 'may', 'might', 'must', 'about', 'above', 'after',  
@@ -729,261 +729,261 @@ STOP\_WORDS \= {
     'past', 'next', 'upcoming', 'want', 'present', 'talk', 'speak'  
 }
 
-\# \--- Google Sheets Connection \---  
-def connect\_gsheets():  
+# --- Google Sheets Connection ---  
+def connect_gsheets():  
     """Connects to Google Sheets using credentials from Streamlit secrets."""  
     try:  
-        creds\_dict \= st.secrets\["google\_service\_account"\]  
-        creds \= Credentials.from\_service\_account\_info(  
-            creds\_dict,  
-            scopes=\[  
+        creds_dict = st.secrets["google_service_account"]  
+        creds = Credentials.from_service_account_info(  
+            creds_dict,  
+            scopes=[  
                 "https://www.googleapis.com/auth/spreadsheets",  
-                "https://www.googleapis.com/auth/drive.readonly" \# if PDF links are in Drive & need checking, though direct links usually work  
-            \],  
+                "https://www.googleapis.com/auth/drive.readonly" # if PDF links are in Drive & need checking, though direct links usually work  
+            ],  
         )  
-        gc \= gspread.authorize(creds)  
+        gc = gspread.authorize(creds)  
         return gc  
     except Exception as e:  
         st.error(f"Error connecting to Google Sheets: {e}")  
-        st.error("Please ensure your \`secrets.toml\` is configured correctly with Google Service Account credentials.")  
+        st.error("Please ensure your `secrets.toml` is configured correctly with Google Service Account credentials.")  
         return None
 
-gc \= connect\_gsheets() \# Initialize connection once
+gc = connect_gsheets() # Initialize connection once
 
-def get\_sheet\_data\_as\_df(gc\_conn, sheet\_name):  
+def get_sheet_data_as_df(gc_conn, sheet_name):  
     """Fetches all data from a sheet and returns it as a Pandas DataFrame."""  
-    if not gc\_conn:  
+    if not gc_conn:  
         return pd.DataFrame()  
     try:  
-        spreadsheet \= gc\_conn.open\_by\_key(st.secrets\["google\_sheet\_id"\]) \# Add your Google Sheet ID to secrets.toml  
-        \# Or open by name if preferred, but ID is more robust:  
-        \# spreadsheet \= gc\_conn.open("Your Google Sheet Name")  
-        worksheet \= spreadsheet.worksheet(sheet\_name)  
-        data \= worksheet.get\_all\_records() \# Assumes first row is header  
+        spreadsheet = gc_conn.open_by_key(st.secrets["google_sheet_id"]) # Add your Google Sheet ID to secrets.toml  
+        # Or open by name if preferred, but ID is more robust:  
+        # spreadsheet = gc_conn.open("Your Google Sheet Name")  
+        worksheet = spreadsheet.worksheet(sheet_name)  
+        data = worksheet.get_all_records() # Assumes first row is header  
         return pd.DataFrame(data)  
     except gspread.exceptions.WorksheetNotFound:  
-        st.warning(f"Sheet '{sheet\_name}' not found. Please ensure it exists in your Google Spreadsheet.")  
+        st.warning(f"Sheet '{sheet_name}' not found. Please ensure it exists in your Google Spreadsheet.")  
         return pd.DataFrame()  
     except Exception as e:  
-        st.error(f"Error fetching data from sheet '{sheet\_name}': {e}")  
+        st.error(f"Error fetching data from sheet '{sheet_name}': {e}")  
         return pd.DataFrame()
 
-def get\_next\_meetup\_info(gc\_conn):  
-    """Fetches data from the Next\_Meetup sheet."""  
-    if not gc\_conn:  
+def get_next_meetup_info(gc_conn):  
+    """Fetches data from the Next_Meetup sheet."""  
+    if not gc_conn:  
         return None  
     try:  
-        spreadsheet \= gc\_conn.open\_by\_key(st.secrets\["google\_sheet\_id"\])  
-        worksheet \= spreadsheet.worksheet(SHEET\_NAME\_NEXT\_MEETUP)  
-        data \= worksheet.get\_all\_records() \# Assumes headers and potentially multiple upcoming meetups  
-        return data \# Returns a list of dictionaries  
+        spreadsheet = gc_conn.open_by_key(st.secrets["google_sheet_id"])  
+        worksheet = spreadsheet.worksheet(SHEET_NAME_NEXT_MEETUP)  
+        data = worksheet.get_all_records() # Assumes headers and potentially multiple upcoming meetups  
+        return data # Returns a list of dictionaries  
     except gspread.exceptions.WorksheetNotFound:  
-        st.warning(f"Sheet '{SHEET\_NAME\_NEXT\_MEETUP}' not found.")  
+        st.warning(f"Sheet '{SHEET_NAME_NEXT_MEETUP}' not found.")  
         return None  
     except Exception as e:  
         st.error(f"Error fetching next meetup info: {e}")  
         return None
 
-def log\_presenter\_interest(gc\_conn, name, email):  
+def log_presenter_interest(gc_conn, name, email):  
     """Logs presenter interest to the Google Sheet."""  
-    if not gc\_conn:  
+    if not gc_conn:  
         return False  
     try:  
-        spreadsheet \= gc\_conn.open\_by\_key(st.secrets\["google\_sheet\_id"\])  
-        worksheet \= spreadsheet.worksheet(SHEET\_NAME\_PRESENTER\_INTEREST)  
-        timestamp \= datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")  
-        worksheet.append\_row(\[timestamp, name, email\])  
+        spreadsheet = gc_conn.open_by_key(st.secrets["google_sheet_id"])  
+        worksheet = spreadsheet.worksheet(SHEET_NAME_PRESENTER_INTEREST)  
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")  
+        worksheet.append_row([timestamp, name, email])  
         return True  
     except gspread.exceptions.WorksheetNotFound:  
-        st.error(f"Sheet '{SHEET\_NAME\_PRESENTER\_INTEREST}' not found. Could not log interest.")  
+        st.error(f"Sheet '{SHEET_NAME_PRESENTER_INTEREST}' not found. Could not log interest.")  
         return False  
     except Exception as e:  
         st.error(f"Error logging presenter interest: {e}")  
         return False
 
-def clean\_query(query\_text):  
+def clean_query(query_text):  
     """Simple query cleaning: lowercase and remove basic stop words."""  
-    if not query\_text or not isinstance(query\_text, str):  
-        return \[\]  
-    words \= query\_text.lower().split()  
-    cleaned\_words \= \[word for word in words if word not in STOP\_WORDS\]  
-    return cleaned\_words
+    if not query_text or not isinstance(query_text, str):  
+        return []  
+    words = query_text.lower().split()  
+    cleaned_words = [word for word in words if word not in STOP_WORDS]  
+    return cleaned_words
 
-\# \--- Streamlit App UI \---  
-st.set\_page\_config(page\_title="CNJ Data Science Meetup Bot", layout="wide")
+# --- Streamlit App UI ---  
+st.set_page_config(page_title="CNJ Data Science Meetup Bot", layout="wide")
 
 st.title("🤖 Central NJ Data Science Meetup Knowledge Agent")
 
-\# \--- User Authentication / Session Management \---  
-if 'user\_name' not in st.session\_state:  
-    st.session\_state.user\_name \= ""  
-if 'user\_email' not in st.session\_state:  
-    st.session\_state.user\_email \= ""  
-if 'authenticated' not in st.session\_state:  
-    st.session\_state.authenticated \= False
+# --- User Authentication / Session Management ---  
+if 'user_name' not in st.session_state:  
+    st.session_state.user_name = ""  
+if 'user_email' not in st.session_state:  
+    st.session_state.user_email = ""  
+if 'authenticated' not in st.session_state:  
+    st.session_state.authenticated = False
 
-if not st.session\_state.authenticated:  
+if not st.session_state.authenticated:  
     st.header("👋 Hi, what is your name?")  
-    name\_input \= st.text\_input("Your Name:", key="name\_input\_field")  
-    email\_input \= st.text\_input("Your Email Address:", key="email\_input\_field")
+    name_input = st.text_input("Your Name:", key="name_input_field")  
+    email_input = st.text_input("Your Email Address:", key="email_input_field")
 
-    if st.button("Submit", key="auth\_button"):  
-        if name\_input and email\_input:  
-            if "@" in email\_input and "." in email\_input: \# Basic email validation  
-                st.session\_state.user\_name \= name\_input  
-                st.session\_state.user\_email \= email\_input  
-                st.session\_state.authenticated \= True  
-                st.rerun() \# Rerun to reflect authenticated state  
+    if st.button("Submit", key="auth_button"):  
+        if name_input and email_input:  
+            if "@" in email_input and "." in email_input: # Basic email validation  
+                st.session_state.user_name = name_input  
+                st.session_state.user_email = email_input  
+                st.session_state.authenticated = True  
+                st.rerun() # Rerun to reflect authenticated state  
             else:  
                 st.error("Please enter a valid email address.")  
         else:  
             st.warning("Please enter both your name and email address.")  
 else:  
-    \# \--- Main Application Logic (after authentication) \---  
-    st.sidebar.header(f"Hello {st.session\_state.user\_name}\!")  
-    st.sidebar.write("Welcome to the Central NJ Data Science Meetup\!")
+    # --- Main Application Logic (after authentication) ---  
+    st.sidebar.header(f"Hello {st.session_state.user_name}!")  
+    st.sidebar.write("Welcome to the Central NJ Data Science Meetup!")
 
-    menu\_options \= {  
+    menu_options = {  
         "ℹ️ Info on Past Meetups": 1,  
         "📅 Info on Next Meetup": 2,  
         "🎤 Present in Upcoming Meetup": 3  
     }  
-    choice\_str \= st.sidebar.radio(  
+    choice_str = st.sidebar.radio(  
         "What would you like to do?",  
-        options=list(menu\_options.keys()),  
-        key="menu\_choice"  
+        options=list(menu_options.keys()),  
+        key="menu_choice"  
     )  
-    user\_choice \= menu\_options\[choice\_str\]
+    user_choice = menu_options[choice_str]
 
-    if gc: \# Proceed only if Google Sheets connection is successful  
-        \# \--- 1\. Information on a topic covered in past meetups \---  
-        if user\_choice \== 1:  
+    if gc: # Proceed only if Google Sheets connection is successful  
+        # --- 1---. Information on a topic covered in past meetups ---  
+        if user_choice == 1:  
             st.subheader("📚 Search Past Meetups")  
-            search\_query \= st.text\_input("Enter keywords to search by topic, title, or presenter:", key="search\_query\_past")
+            search_query = st.text_input("Enter keywords to search by topic, title, or presenter:", key="search_query_past")
 
-            if search\_query:  
-                past\_meetups\_df \= get\_sheet\_data\_as\_df(gc, SHEET\_NAME\_PAST\_MEETUPS)  
-                if not past\_meetups\_df.empty:  
-                    cleaned\_keywords \= clean\_query(search\_query)  
-                    if not cleaned\_keywords: \# if query only contained stop words  
+            if search_query:  
+                past_meetups_df = get_sheet_data_as_df(gc, SHEET_NAME_PAST_MEETUPS)  
+                if not past_meetups_df.empty:  
+                    cleaned_keywords = clean_query(search_query)  
+                    if not cleaned_keywords: # if query only contained stop words  
                         st.info("Please try more specific keywords.")  
                     else:  
-                        \# Search in 'Presentation Title', 'Synopsis', and 'Presenter'  
-                        \# Ensure columns exist and handle potential missing data (fillna)  
-                        results\_df \= past\_meetups\_df\[  
-                            past\_meetups\_df.apply(  
+                        # Search in 'Presentation Title', 'Synopsis', and 'Presenter'  
+                        # Ensure columns exist and handle potential missing data (fillna)  
+                        results_df = past_meetups_df[  
+                            past_meetups_df.apply(  
                                 lambda row: any(  
                                     keyword in str(row.get('Presentation Title', '')).lower() or  
                                     keyword in str(row.get('Synopsis', '')).lower() or  
                                     keyword in str(row.get('Presenter', '')).lower()  
-                                    for keyword in cleaned\_keywords  
+                                    for keyword in cleaned_keywords  
                                 ),  
                                 axis=1  
                             )  
-                        \]
+                        ]
 
-                        if not results\_df.empty:  
-                            st.write(f"Found {len(results\_df)} results:")  
-                            for index, row in results\_df.iterrows():  
+                        if not results_df.empty:  
+                            st.write(f"Found {len(results_df)} results:")  
+                            for index, row in results_df.iterrows():  
                                 st.markdown(f"---")  
-                                if 'Presentation Title' in row and row\['Presentation Title'\] and 'PDF\_Link' in row and row\['PDF\_Link'\]:  
-                                    st.markdown(f"\*\*Presentation Title:\*\* \[{row\['Presentation Title'\]}\]({row\['PDF\_Link'\]})")  
-                                elif 'Presentation Title' in row and row\['Presentation Title'\]:  
-                                    st.markdown(f"\*\*Presentation Title:\*\* {row\['Presentation Title'\]}")
+                                if 'Presentation Title' in row and row['Presentation Title'] and 'PDF_Link' in row and row['PDF_Link']:  
+                                    st.markdown(f"**Presentation Title:** [{row['Presentation Title']}]({row['PDF_Link']})")  
+                                elif 'Presentation Title' in row and row['Presentation Title']:  
+                                    st.markdown(f"**Presentation Title:** {row['Presentation Title']}")
 
-                                if 'Synopsis' in row and row\['Synopsis'\]:  
+                                if 'Synopsis' in row and row['Synopsis']:  
                                     with st.expander("Synopsis"):  
-                                        st.write(row\['Synopsis'\])  
-                                if 'Presenter' in row and row\['Presenter'\]:  
-                                    st.markdown(f"\*\*Presenter:\*\* {row\['Presenter'\]}")  
-                                if 'Month/Year' in row and row\['Month/Year'\]:  
-                                    st.markdown(f"\*\*Month/Year:\*\* {row\['Month/Year'\]}")  
+                                        st.write(row['Synopsis'])  
+                                if 'Presenter' in row and row['Presenter']:  
+                                    st.markdown(f"**Presenter:** {row['Presenter']}")  
+                                if 'Month/Year' in row and row['Month/Year']:  
+                                    st.markdown(f"**Month/Year:** {row['Month/Year']}")  
                             st.markdown(f"---")  
                         else:  
-                            st.info(f"No past meetups found matching your query: '{search\_query}'. Try different keywords.")  
+                            st.info(f"No past meetups found matching your query: '{search_query}'. Try different keywords.")  
                 else:  
                     st.warning("Could not retrieve past meetup data. The sheet might be empty or inaccessible.")  
             else:  
                 st.info("Type some keywords above to search for past meetups.")
 
-        \# \--- 2\. Information on the next meetup \---  
-        elif user\_choice \== 2:  
+        # --- 2---. Information on the next meetup ---  
+        elif user_choice == 2:  
             st.subheader("🗓️ Next Meetup Information")  
-            next\_meetup\_data \= get\_next\_meetup\_info(gc)  
-            if next\_meetup\_data:  
-                if isinstance(next\_meetup\_data, list) and len(next\_meetup\_data) \> 0:  
-                    for i, meetup in enumerate(next\_meetup\_data):  
-                        if i \> 0: st.markdown("---") \# Separator for multiple upcoming meetups  
-                        st.markdown(f"\*\*Presentation Title:\*\* {meetup.get('Presentation Title', 'N/A')}")  
-                        synopsis \= meetup.get('Synopsis', 'Not available.')  
+            next_meetup_data = get_next_meetup_info(gc)  
+            if next_meetup_data:  
+                if isinstance(next_meetup_data, list) and len(next_meetup_data) > 0:  
+                    for i, meetup in enumerate(next_meetup_data):  
+                        if i > 0: st.markdown("---") # Separator for multiple upcoming meetups  
+                        st.markdown(f"**Presentation Title:** {meetup.get('Presentation Title', 'N/A')}")  
+                        synopsis = meetup.get('Synopsis', 'Not available.')  
                         with st.expander("Synopsis"):  
                             st.write(synopsis if synopsis else "Not available.")  
-                        st.markdown(f"\*\*Presenter:\*\* {meetup.get('Presenter', 'N/A')}")  
-                else: \# Handles case where sheet might exist but is empty  
+                        st.markdown(f"**Presenter:** {meetup.get('Presenter', 'N/A')}")  
+                else: # Handles case where sheet might exist but is empty  
                     st.info("Information for the next meetup is not yet available. Please check back later.")  
-            else: \# Handles case where sheet doesn't exist or other error  
+            else: # Handles case where sheet doesn't exist or other error  
                  st.info("Information for the next meetup is not yet available or could not be retrieved. Please check back later.")
 
-        \# \--- 3\. Present in upcoming meetup \---  
-        elif user\_choice \== 3:  
+        # --- 3. Present in upcoming meetup ---  
+        elif user_choice == 3:  
             st.subheader("💡 Present in an Upcoming Meetup")  
-            st.success(f"Thank you for your interest in presenting, {st.session\_state.user\_name}\! We will contact you shortly at {st.session\_state.user\_email} for further details.")  
-            if not log\_presenter\_interest(gc, st.session\_state.user\_name, st.session\_state.user\_email):  
+            st.success(f"Thank you for your interest in presenting, {st.session_state.user_name}! We will contact you shortly at {st.session_state.user_email} for further details.")  
+            if not log_presenter_interest(gc, st.session_state.user_name, st.session_state.user_email):  
                 st.error("There was an issue logging your interest. Please try again later or contact the organizers directly.")  
             else:  
-                st.balloons() \# A little celebration\!
+                st.balloons() # A little celebration!
 
-    else: \# gc is None (Google Sheets connection failed)  
+    else: # gc is None (Google Sheets connection failed)  
         st.error("The Knowledge Agent is currently unable to connect to its data source. Please try again later.")
 
-    if st.sidebar.button("Log out", key="logout\_button"):  
-        st.session\_state.authenticated \= False  
-        st.session\_state.user\_name \= ""  
-        st.session\_state.user\_email \= ""  
+    if st.sidebar.button("Log out", key="logout_button"):  
+        st.session_state.authenticated = False  
+        st.session_state.user_name = ""  
+        st.session_state.user_email = ""  
         st.rerun()
 
 st.markdown("---")  
 st.caption("Central NJ Data Science Meetup Bot")  
-\`\`\`
+```
 
-\*\*Key things to add to your \`secrets.toml\` for the \`app.py\` above:\*\*
+**Key things to add to your \`secrets.toml\` for the \`app.py\` above:**
 
-\`\`\`toml  
-\# .streamlit/secrets.toml
+```toml  
+# .streamlit/secrets.toml
 
-\[google\_service\_account\]  
-type \= "service\_account"  
-\# ... (all other fields from your JSON key) ...  
-client\_email \= "your-service-account-email@your-project-id.iam.gserviceaccount.com"  
-private\_key \= "-----BEGIN PRIVATE KEY-----\\nYOUR\_PRIVATE\_KEY\_HERE\\n-----END PRIVATE KEY-----\\n"  
-\# ... (etc.)
+[google_service_account]  
+type = "service_account"  
+# ... (all other fields from your JSON key) ...  
+client_email = "your-service-account-email@your-project-id.iam.gserviceaccount.com"  
+private_key = "-----BEGIN PRIVATE KEY-----\nYOUR_PRIVATE_KEY_HERE\n-----END PRIVATE KEY-----\n"  
+# ... (etc.)
 
-\# Add your Google Sheet ID here:  
-google\_sheet\_id \= "YOUR\_GOOGLE\_SHEET\_ID\_HERE"   —  got error “Error fetching data from sheet 'Past\_Meetups': 'st.secrets has no key "google\_sheet\_id"...”.  Fixed it by moving this to beginning of TOML file.  
-\`\`\`
+# Add your Google Sheet ID here:  
+google_sheet_id = "YOUR_GOOGLE_SHEET_ID_HERE"   # got error “Error fetching data from sheet 'Past_Meetups': 'st.secrets has no key "google_sheet_id"...”.  Fixed it by moving this to beginning of TOML file.  
+```
 
 You can find the \`YOUR\_GOOGLE\_SHEET\_ID\_HERE\` in the URL of your Google Sheet. For example, if the URL is \`https://docs.google.com/spreadsheets/d/123xyzABCDEFG/edit\#gid=0\`, then your sheet ID is \`123xyzABCDEFG\`.
 
-\*\*To Run the Application:\*\*
+**To Run the Application:**
 
-1\.  Save the Python code as \`app.py\`.  
-2\.  Save the requirements as \`requirements.txt\`.  
-3\.  Create the \`.streamlit/secrets.toml\` file with your credentials and Sheet ID.  
-4\.  Open your terminal or command prompt.  
-5\.  Navigate to the directory where you saved these files.  
-6\.  Create a virtual environment (recommended):  
-    \`\`\`bash  
-    python \-m venv venv  
-    source venv/bin/activate  \# On Windows: venv\\Scripts\\activate  
-    \`\`\`  
-7\.  Install the dependencies:  
-    \`\`\`bash  
-    pip install \-r requirements.txt  
-    \`\`\`  
-8\.  Run the Streamlit app:  
-    \`\`\`bash  
-    streamlit run app.py  
-    \`\`\`
+1.  Save the Python code as \`app.py\`.
+2.  Save the requirements as \`requirements.txt\`.
+3.  Create the \`.streamlit/secrets.toml\` file with your credentials and Sheet ID.
+4.  Open your terminal or command prompt.
+5.  Navigate to the directory where you saved these files.
+6.  Create a virtual environment (recommended):
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
+    ```
+7.  Install the dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+8.  Run the Streamlit app:
+    ```bash
+    streamlit run app.py
+    ```
 
 This should open the application in your web browser. Remember to replace placeholders in \`secrets.toml\` and the script with your actual information.
 

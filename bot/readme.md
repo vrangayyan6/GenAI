@@ -7,10 +7,10 @@ Requirements:
 a. The bot must start by displaying the greeting "Hi, what is your name?".  
 b. The bot must request for email address of the user.  
 c. The bot must display the following message:  
-"Hello \<name of user\>, Welcome to the Central NJ Data Science Meetup\!   
-1. Do you need information on a topic covered in past meetups?  
-2. Do you need information on the next meetup?  
-3. Do you want to present in upcoming meetup?"  
+   "Hello \<name of user\>, Welcome to the Central NJ Data Science Meetup\!   
+   1\. Do you need information on a topic covered in past meetups?  
+   2\. Do you need information on the next meetup?  
+   3\. Do you want to present in upcoming meetup?"  
 d. If user requests information on a topic covered in past meetup, the bot must provide results with following fields: "Presentation title", "Synopsis", "Presenter", "Month/Year".  Presentation title must link to the PDF file in Google Drive.  
 e. If user requests information on next meetup, the bot must provide results with following fields: "Presentation title", "Synopsis", "Presenter".  
 f. If user wants to present in upcoming meetup, the bot must display message "Thank you for your interest in presenting in upcoming meetup\!  We will contact you shortly by email for further details."  

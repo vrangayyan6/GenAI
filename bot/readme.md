@@ -8,7 +8,8 @@
 
 ![Bot - Present in upcoming meetup](https://github.com/vrangayyan6/GenAI/blob/main/bot/bot_present.png)
 
-### Prompt to Gemini 2.5 Pro (preview) \-
+==================================================================
+## 1. Prompt to Gemini 2.5 Pro (preview) \-
 
 Requirements:  
 \--  
@@ -61,7 +62,7 @@ Once I have answers to these questions, I can propose more tailored and effectiv
 
 However, based on the initial requirements and the goal of being "low cost," here are some general options and a potential solution design:
 
-## **General Options for a Low-Cost Knowledge Agent:**
+#### **General Options for a Low-Cost Knowledge Agent:**
 
 Here's a breakdown of potential approaches, ranging from simpler to slightly more complex, keeping "low cost" as a primary driver.
 
@@ -130,7 +131,7 @@ Here's a breakdown of potential approaches, ranging from simpler to slightly mor
   * **Resource Intensive (Potentially):** Running LLMs can be, but small embedding models and vector search are manageable. Cloud APIs for embeddings/LLMs can be used, but watch costs (though some have free tiers).  
   * **Development Time:** Will take longer to develop.
 
-## **Recommended Solution Design (Focusing on Google Sheets Backend for Simplicity & Low Cost):**
+#### **Recommended Solution Design (Focusing on Google Sheets Backend for Simplicity & Low Cost):**
 
 This design balances ease of use, low cost, and the ability to meet all requirements.
 
@@ -176,7 +177,7 @@ Bot displays:
 3. Do you want to present in upcoming meetup?  
 Please enter the number of your choice (1, 2, or 3).
 
-*   
+
 3. **Handling User Choices:**  
    * **Choice 1: Past Meetups (Req d):**  
      * Bot asks: "What topic are you interested in?" (or provides a way to list all/browse).  
@@ -274,9 +275,9 @@ Please provide answers to the following questions:
 
 Once I have your responses, I can refine the proposed options and solution design to be much more specific and useful for the Central NJ Data Science Meetup.
 
-—--------------------------------
+==================================================================
 
-### Prompt \- 
+## 2. Prompt \- 
 
 1.  Data Storage for Past Meetups:  
     \* Where is the information about past meetups (presentation title, synopsis, presenter, month/year, PDF link) currently stored? (e.g., Google Sheets, CSV file, a simple database, website content, etc.)  
@@ -439,7 +440,7 @@ Here's a breakdown of why and how, along with specific recommendations for your 
       * Search for "meetups" OR "machine" OR "learning" in the relevant fields.  
     * **More Advanced (Future consideration, adds complexity):** Using sentence embeddings for semantic search. Libraries like `sentence-transformers` can create vector embeddings of your synopses and titles, and also the user's query, then find the closest matches. This is powerful but adds a layer of complexity and potentially minor processing overhead or dependency management. For 100 meetups and 50 users/month, direct keyword matching is likely sufficient and much simpler to implement.
 
-## **Proposed Solution Design (Refined)**
+#### **Proposed Solution Design (Refined)**
 
 **I. Backend \- Data Management (Google Sheets)**
 
@@ -554,9 +555,9 @@ The workflow is clear: setup by technical volunteers and founder, simple data ma
 
 I believe this refined plan provides a solid foundation for developing the Knowledge Agent. I have no further immediate concerns or questions regarding this design. It seems like an excellent path forward\!
 
-—---------------
+==================================================================
 
-### Prompt \- 
+## 3. Prompt \- 
 
 Provide the Python script app.py and the requirements.txt file.  
 —---------------

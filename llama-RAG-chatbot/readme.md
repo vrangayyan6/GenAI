@@ -1,5 +1,7 @@
 # Llama 3.2 RAG Chatbot with Streamlit
 
+![Llama 3.2 RAG Chatbot UI](https://github.com/vrangayyan6/GenAI/blob/main/llama-RAG-chatbot/Llama%20RAG%20chatbot.png)
+
 A simple yet powerful chatbot application built with Streamlit that leverages the Llama 3.2 model via Ollama. It uses Retrieval-Augmented Generation (RAG) with ChromaDB to answer questions based on a custom knowledge base of PDF documents.
 
 ## Features

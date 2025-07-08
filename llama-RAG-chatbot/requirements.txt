@@ -1,0 +1,11 @@
+# torch
+# transformers
+# numpy
+# flask
+langchain_core
+langchain_ollama
+langchain_community
+langchain_chroma
+pypdf
+requests
+streamlit

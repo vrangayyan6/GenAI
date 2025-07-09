@@ -4,7 +4,7 @@
 # .\llama-venv\Scripts\activate
 # install Ollama first from https://ollama.com/
 # curl -fsSL https://ollama.com/install.sh | sh
-# ollama run llama3.2:1b
+# ollama run llama3.2:3b   # llama3.2:3b or llama3.2:1b
 # pip install -r requirements.txt
 # streamlit run app.py
 

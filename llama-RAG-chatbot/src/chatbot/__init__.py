@@ -61,7 +61,7 @@ class Chatbot:
                 f"ChromaDB not found at {CHROMA_PATH}. "
                 "Please run the ingestion script first (e.g., `python -m src.util.ingest`)."
             )
-        embeddings = OllamaEmbeddings(model="llama3.2:1b")
+        embeddings = OllamaEmbeddings(model="llama3.2:3b")  # llama3.2:3b or llama3.2:1b
         vectorstore = Chroma(persist_directory=CHROMA_PATH, embedding_function=embeddings)
         retriever = vectorstore.as_retriever()
 

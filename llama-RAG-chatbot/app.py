@@ -19,7 +19,7 @@ def load_chatbot():
     chatbot.load_model()
     return chatbot
 
-st.title("Llama 3.2 Chatbot")
+st.title("Llama 3.2 RAG Chatbot")
 
 # Initialize chat history in session state
 if "messages" not in st.session_state:
@@ -41,9 +41,6 @@ if prompt := st.chat_input("What would you like to ask?"):
         st.markdown(prompt)
     # Generate and display assistant response
     with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
-            response = chatbot.generate_response(prompt)
-            st.markdown(response)
+        response = st.write_stream(chatbot.stream_response(prompt))
     # Add assistant response to chat history
     st.session_state.messages.append({"role": "assistant", "content": response})
-

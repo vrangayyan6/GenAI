@@ -56,9 +56,9 @@ Follow these steps to get the application running on your local machine.
     ```
 
 4.  **Pull the Llama 3.2 model:**
-    Run the following command in your terminal to download the required model. The application is configured to use `llama3.2:1b`.
+    Run the following command in your terminal to download the required model. The application is configured to use `llama3.2:3b` or `llama3.2:1b`.
     ```bash
-    ollama run llama3.2:1b
+    ollama run llama3.2:3b  # or llama3.2:1b
     ```
     This command will also start the Ollama server if it's not already running.
 
@@ -105,6 +105,6 @@ Follow these steps to get the application running on your local machine.
 
 ## Configuration
 
--   **Model Parameters**: The LLM model (`llama3.2:1b`), temperature, and other generation parameters can be configured in `src/chatbot/__init__.py`.
+-   **Model Parameters**: The LLM model (`llama3.2:3b` or `llama3.2:1b`), temperature, and other generation parameters can be configured in `src/chatbot/__init__.py`.
 -   **Text Splitting**: Chunk size and overlap for document processing can be adjusted in `src/util/ingest.py`.
 -   **Prompt Template**: The RAG prompt template can be modified in `src/chatbot/__init__.py` to change the chatbot's behavior and response style.

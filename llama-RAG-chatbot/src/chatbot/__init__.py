@@ -105,6 +105,12 @@ class Chatbot:
         response = self.chain.invoke(user_input)
         return response.strip()
 
+    def stream_response(self, user_input):
+        """Streams the response from the RAG chain."""
+        if not self.chain:
+            raise RuntimeError("Model not loaded. Please call load_model() first.")
+        return self.chain.stream(user_input)
+
     def chat(self):
         print("Chatbot is ready! Type 'exit' to quit.")
         while True:

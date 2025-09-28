@@ -1,0 +1,8 @@
+# Your Gemini API Key from Google AI Studio
+GOOGLE_API_KEY="YOUR_GEMINI_API_KEY"
+
+# The ID of the Google Drive folder containing your PDFs
+GDRIVE_FOLDER_ID="YOUR_GOOGLE_DRIVE_FOLDER_ID"
+
+# The ID of the Google Sheet for upcoming meetups and contributions
+GSHEET_ID="YOUR_GOOGLE_SHEET_ID"

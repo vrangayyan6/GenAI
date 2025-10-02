@@ -1,0 +1,21 @@
+# Core libraries
+gradio
+langchain
+langgraph
+langchain-google-genai
+langchain-community
+langchain-chroma  # <-- ADD THIS LINE
+langchain_huggingface  # <-- ADD THIS LINE
+
+# Data and utilities
+python-dotenv
+pandas
+gspread
+oauth2client
+google-api-python-client
+PyDrive2
+
+# For PDF processing and vector store
+pypdf
+chromadb
+sentence-transformers  # <-- ADD THIS LINE

@@ -7,7 +7,7 @@ from pydrive2.drive import GoogleDrive
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 
 # Load environment variables from .env file
 load_dotenv()
@@ -40,7 +40,7 @@ def sync_vector_db():
 
     # --- 1. Initialize Embeddings and Vector Store ---
     print("Initializing embeddings model and vector store...")
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     vector_store = Chroma(
         persist_directory=DB_DIR,
         embedding_function=embeddings

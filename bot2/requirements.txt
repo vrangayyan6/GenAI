@@ -19,3 +19,9 @@ PyDrive2
 pypdf
 chromadb
 sentence-transformers  # <-- ADD THIS LINE
+
+numpy
+langchain_core
+google-generativeai
+transformers
+torch

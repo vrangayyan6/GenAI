@@ -8,8 +8,8 @@ from typing import TypedDict, Annotated, List
 from dotenv import load_dotenv
 
 import gradio as gr
-from langchain_core.messages import BaseMessage, HumanMessage
-from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+from langchain_core.messages import BaseMessage
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_chroma import Chroma
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
@@ -25,8 +25,9 @@ SERVICE_ACCOUNT_FILE = 'service_account.json'
 
 # --- Initialize models and vector store ---
 print("Initializing models and vector store...")
-llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.7)
-embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-lite", temperature=0.7)
+from langchain_huggingface import HuggingFaceEmbeddings
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 vector_store = Chroma(persist_directory=DB_DIR, embedding_function=embeddings)
 retriever = vector_store.as_retriever(search_kwargs={"k": 5})
 
@@ -45,7 +46,7 @@ except Exception as e:
 class AgentState(TypedDict):
     query: str
     name: str
-    email: str
+    email: str 
     intent: str
     context: str
     response: str
@@ -82,7 +83,12 @@ def google_sheets_write(state: AgentState) -> AgentState:
     try:
         worksheet = spreadsheet.worksheet("Contributions")
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        row = [timestamp, state["name"], state["email"], state["query"]]
+        # Extract the topic from the query for a cleaner sheet entry
+        topic_prompt = ChatPromptTemplate.from_template("Extract the presentation topic from this user message: {query}. Just return the topic itself.")
+        topic_chain = topic_prompt | llm | StrOutputParser()
+        topic = topic_chain.invoke({"query": state["query"]})
+        
+        row = [timestamp, state["name"], state["email"], topic, state["query"]]
         worksheet.append_row(row)
         response = "Thanks for your interest! We've received your submission and will contact you at the email provided."
         return {**state, "response": response}
@@ -99,7 +105,8 @@ def classify_intent_node(state: AgentState) -> AgentState:
         """Given the user query, classify its intent. The possible intents are:
         1. `PAST_MEETUP_QUERY`: The user is asking a question about a past topic, speaker, or tool.
         2. `UPCOMING_MEETUP_QUERY`: The user is asking about the next or an upcoming meetup.
-        3. `CONTRIBUTION_INTEREST`: The user is expressing interest in speaking, presenting, or contributing.
+        3. `CONTRIBUTION_INTEREST`: The user is expressing interest in speaking, presenting, or contributing. This includes "I want to present", "I can talk about Z", etc.
+        4. `GREETING_OR_THANKS`: The user is saying hello, thanks, or having a simple conversational exchange.
 
         User Query: {query}
         
@@ -110,6 +117,16 @@ def classify_intent_node(state: AgentState) -> AgentState:
     print(f"   -> Intent: {intent}")
     return {**state, "intent": intent}
 
+def simple_response_node(state: AgentState) -> AgentState:
+    """Handles simple conversational turns like greetings."""
+    print("---NODE: Simple Response---")
+    # This can be made more sophisticated, but for now, a simple canned response works.
+    if "thank" in state["query"].lower():
+        response = "You're welcome! How else can I help you today?"
+    else:
+        response = "Hello! How can I help you with the CNJDS meetups?"
+    return {**state, "response": response}
+
 def tool_execution_node(state: AgentState) -> AgentState:
     """Routes to the correct tool based on intent."""
     print("---NODE: Execute Tool---")
@@ -118,9 +135,11 @@ def tool_execution_node(state: AgentState) -> AgentState:
         return rag_search(state)
     elif "UPCOMING_MEETUP_QUERY" in intent:
         return google_sheets_read(state)
-    # Default or fallback to contribution if intent is unclear but seems like an offer
     elif "CONTRIBUTION_INTEREST" in intent:
         return google_sheets_write(state)
+    elif "GREETING_OR_THANKS" in intent:
+        # This intent doesn't need a tool, it has a direct response.
+        return state # Pass through, will be routed to simple_response_node
     else: # Fallback for unclear intents
         print("   -> Fallback to RAG search for unclear intent.")
         return rag_search(state)
@@ -156,8 +175,22 @@ graph_builder = StateGraph(AgentState)
 graph_builder.add_node("classify_intent", classify_intent_node)
 graph_builder.add_node("execute_tool", tool_execution_node)
 graph_builder.add_node("generate_response", generate_response_node)
+graph_builder.add_node("simple_response", simple_response_node)
 
 graph_builder.set_entry_point("classify_intent")
+
+# Conditional routing after classification
+def route_after_classification(state: AgentState):
+    intent = state["intent"]
+    if "GREETING_OR_THANKS" in intent:
+        return "simple_response"
+    else:
+        return "execute_tool"
+
+graph_builder.add_conditional_edges(
+    "classify_intent",
+    route_after_classification,
+)
 
 # Conditional routing after tool execution
 def should_generate_response(state: AgentState):
@@ -167,7 +200,6 @@ def should_generate_response(state: AgentState):
     # Otherwise, proceed to the generation step.
     return "generate_response"
 
-graph_builder.add_edge("classify_intent", "execute_tool")
 graph_builder.add_conditional_edges(
     "execute_tool",
     should_generate_response,
@@ -177,6 +209,7 @@ graph_builder.add_conditional_edges(
     }
 )
 graph_builder.add_edge("generate_response", END)
+graph_builder.add_edge("simple_response", END)
 
 agent = graph_builder.compile()
 print("✅ Graph compiled successfully.")
@@ -191,14 +224,12 @@ def respond(message: str, chat_history: List, name: str, email: str) -> str:
         return "Please provide your name and email address before asking a question."
 
     initial_state = {"query": message, "name": name, "email": email}
-    
-    # Stream the graph execution to see the steps
+
     final_state = None
     for step in agent.stream(initial_state):
-        # The final output is the one with the 'response' key
-        if 'response' in step.get(END, {}):
-            final_state = step[END]
-
+        # The last state in the stream is the final state
+        final_state = step
+    
     return final_state.get("response", "Sorry, something went wrong.")
 
 

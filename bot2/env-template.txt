@@ -6,3 +6,15 @@ GDRIVE_FOLDER_ID="YOUR_GOOGLE_DRIVE_FOLDER_ID"
 
 # The ID of the Google Sheet for upcoming meetups and contributions
 GSHEET_ID="YOUR_GOOGLE_SHEET_ID"
+
+# model to use for embeddings
+HUGGINGFACE_EMBEDDING_MODEL="sentence-transformers/all-MiniLM-L6-v2"
+
+# model to use for chat completions
+MODEL_TO_USE="gemini-2.5-flash-lite"
+
+# set device
+EMBEDDING_DEVICE="cpu"  # or "cuda" if you have a compatible GPU
+
+# Embedding to use
+EMBEDDING_TO_USE="models/text-embedding-004"

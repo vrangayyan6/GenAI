@@ -8,13 +8,22 @@ from typing import TypedDict, Annotated, List
 from dotenv import load_dotenv
 
 import gradio as gr
-from langchain_core.messages import BaseMessage
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.messages import BaseMessage, HumanMessage
+from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langgraph.graph import StateGraph, END
+# from google import genai
+# from google.genai import types
+# import warnings
+# from google.api_core import exceptions as api_exceptions
 
+import google.generativeai as genai
+from google.generativeai import GenerativeModel
+
+import warnings
 # --- 1. Load Environment Variables and Initial Setup ---
 load_dotenv()
 
@@ -22,14 +31,69 @@ load_dotenv()
 DB_DIR = os.path.join(os.path.dirname(__file__), "db")
 GSHEET_ID = os.getenv("GSHEET_ID")
 SERVICE_ACCOUNT_FILE = 'service_account.json'
+model_to_use = os.getenv("MODEL_TO_USE")
+embedding_to_use = os.getenv("EMBEDDING_TO_USE")
+
+
+# def show_available_models():
+#     avl_models = []
+#     try:
+#         client = genai.Client()
+#         avl_models = client.list_models()
+
+#         # List the available models
+#         avl_models = client.models.list()
+
+#         # Iterate and print information about each model
+#         for model in avl_models:
+#             print(f"Model Name: {model.name}")
+#             print(f"Description: {model.description}")
+#             # print(f"Input Modalities: {model.input_modalities}")
+#             # print(f"Output Modalities: {model.output_modalities}")
+#             # print("-" * 20)
+#     except Exception as e:
+#         print(f"Could not list models from genai: {e}")
+
+#     return avl_models
+
+# print("show_available_models:", show_available_models())
 
 # --- Initialize models and vector store ---
 print("Initializing models and vector store...")
-llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-lite", temperature=0.7)
-from langchain_huggingface import HuggingFaceEmbeddings
-embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-vector_store = Chroma(persist_directory=DB_DIR, embedding_function=embeddings)
-retriever = vector_store.as_retriever(search_kwargs={"k": 5})
+# llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.7)
+# embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+
+try:
+    llm = ChatGoogleGenerativeAI(model=model_to_use, temperature=0.7)
+    # Choose embedding function. The sync script (`sync_vectordb.py`) uses
+    # HuggingFaceEmbeddings (default: sentence-transformers/all-MiniLM-L6-v2)
+    # which produces 384-dimensional vectors. If a persisted Chroma DB
+    # already exists in `DB_DIR`, prefer HuggingFace so dimensions match and
+    # avoid errors like "Collection expecting embedding with dimension of 384, got 768".
+    hf_model = os.getenv("HUGGINGFACE_EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
+    hf_device = os.getenv("EMBEDDING_DEVICE", "cpu")
+
+    # If a Chroma DB was persisted locally, prefer the HF embedding to match it.
+    chroma_db_file = os.path.join(DB_DIR, "chroma.sqlite3")
+    if os.path.exists(chroma_db_file):
+        print("Detected existing Chroma DB. Using HuggingFaceEmbeddings to match persisted vectors.")
+        embeddings = HuggingFaceEmbeddings(model_name=hf_model, model_kwargs={"device": hf_device})
+    else:
+        # Otherwise use the configured embedding (Google GenAI) if provided,
+        # else fall back to the HuggingFace default.
+        if embedding_to_use:
+            embeddings = GoogleGenerativeAIEmbeddings(model=embedding_to_use)
+        else:
+            embeddings = HuggingFaceEmbeddings(model_name=hf_model, model_kwargs={"device": hf_device})
+
+    vector_store = Chroma(persist_directory=DB_DIR, embedding_function=embeddings)
+    retriever = vector_store.as_retriever(search_kwargs={"k": 5})
+except Exception as ei:    
+    print(f"🔥 Error initializing models or vector store: {ei}")
+    llm = None
+    embeddings = None
+    vector_store = None
+    retriever = None
 
 # --- Google Sheets Authentication ---
 try:
@@ -46,10 +110,11 @@ except Exception as e:
 class AgentState(TypedDict):
     query: str
     name: str
-    email: str 
+    email: str
     intent: str
     context: str
     response: str
+
 
 def rag_search(state: AgentState) -> AgentState:
     """Performs a RAG search on the vector database."""
@@ -58,6 +123,7 @@ def rag_search(state: AgentState) -> AgentState:
     docs = retriever.invoke(query)
     context = "\n\n".join([doc.page_content for doc in docs])
     return {**state, "context": context}
+
 
 def google_sheets_read(state: AgentState) -> AgentState:
     """Reads upcoming meetup info from Google Sheets."""
@@ -75,6 +141,7 @@ def google_sheets_read(state: AgentState) -> AgentState:
     except Exception as e:
         return {**state, "context": f"Error reading from Google Sheets: {e}"}
 
+
 def google_sheets_write(state: AgentState) -> AgentState:
     """Writes contribution interest to Google Sheets."""
     print("---TOOL: Google Sheets Write---")
@@ -83,12 +150,7 @@ def google_sheets_write(state: AgentState) -> AgentState:
     try:
         worksheet = spreadsheet.worksheet("Contributions")
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        # Extract the topic from the query for a cleaner sheet entry
-        topic_prompt = ChatPromptTemplate.from_template("Extract the presentation topic from this user message: {query}. Just return the topic itself.")
-        topic_chain = topic_prompt | llm | StrOutputParser()
-        topic = topic_chain.invoke({"query": state["query"]})
-        
-        row = [timestamp, state["name"], state["email"], topic, state["query"]]
+        row = [timestamp, state["name"], state["email"], state["query"]]
         worksheet.append_row(row)
         response = "Thanks for your interest! We've received your submission and will contact you at the email provided."
         return {**state, "response": response}
@@ -105,8 +167,7 @@ def classify_intent_node(state: AgentState) -> AgentState:
         """Given the user query, classify its intent. The possible intents are:
         1. `PAST_MEETUP_QUERY`: The user is asking a question about a past topic, speaker, or tool.
         2. `UPCOMING_MEETUP_QUERY`: The user is asking about the next or an upcoming meetup.
-        3. `CONTRIBUTION_INTEREST`: The user is expressing interest in speaking, presenting, or contributing. This includes "I want to present", "I can talk about Z", etc.
-        4. `GREETING_OR_THANKS`: The user is saying hello, thanks, or having a simple conversational exchange.
+        3. `CONTRIBUTION_INTEREST`: The user is expressing interest in speaking, presenting, or contributing.
 
         User Query: {query}
         
@@ -117,57 +178,58 @@ def classify_intent_node(state: AgentState) -> AgentState:
     print(f"   -> Intent: {intent}")
     return {**state, "intent": intent}
 
-def simple_response_node(state: AgentState) -> AgentState:
-    """Handles simple conversational turns like greetings."""
-    print("---NODE: Simple Response---")
-    # This can be made more sophisticated, but for now, a simple canned response works.
-    if "thank" in state["query"].lower():
-        response = "You're welcome! How else can I help you today?"
-    else:
-        response = "Hello! How can I help you with the CNJDS meetups?"
-    return {**state, "response": response}
 
 def tool_execution_node(state: AgentState) -> AgentState:
     """Routes to the correct tool based on intent."""
     print("---NODE: Execute Tool---")
-    intent = state["intent"]
-    if "PAST_MEETUP_QUERY" in intent:
-        return rag_search(state)
-    elif "UPCOMING_MEETUP_QUERY" in intent:
-        return google_sheets_read(state)
-    elif "CONTRIBUTION_INTEREST" in intent:
-        return google_sheets_write(state)
-    elif "GREETING_OR_THANKS" in intent:
-        # This intent doesn't need a tool, it has a direct response.
-        return state # Pass through, will be routed to simple_response_node
-    else: # Fallback for unclear intents
-        print("   -> Fallback to RAG search for unclear intent.")
-        return rag_search(state)
+    try:
+        intent = state["intent"]
+        if "PAST_MEETUP_QUERY" in intent:
+            return rag_search(state)
+        elif "UPCOMING_MEETUP_QUERY" in intent:
+            return google_sheets_read(state)
+        # Default or fallback to contribution if intent is unclear but seems like an offer
+        elif "CONTRIBUTION_INTEREST" in intent:
+            return google_sheets_write(state)
+        else: # Fallback for unclear intents
+            print("   -> Fallback to RAG search for unclear intent.")
+            return rag_search(state)
+    except Exception as e:
+        print(f"Error during tool execution: {e}")
+        return {**state, "response": "Sorry, something went wrong while processing your request."} 
+
 
 def generate_response_node(state: AgentState) -> AgentState:
     """Generates a final response to the user."""
     print("---NODE: Generate Response---")
-    # If a direct response was set by a tool (e.g., sheets_write), use it.
-    if state.get("response"):
-        return state
+    response = ""
+    try:
+        # If a direct response was set by a tool (e.g., sheets_write), use it.
+        if state.get("response"):
+            return state
 
-    prompt = ChatPromptTemplate.from_template(
-        """You are the CNJDS Meetup Knowledge Agent. Based on the following context, answer the user's query.
-        If the context is empty or doesn't contain the answer, state that you couldn't find the information.
-        
-        Context:
-        {context}
-        
-        Query:
-        {query}
-        
-        Answer:"""
-    )
-    chain = prompt | llm | StrOutputParser()
-    response = chain.invoke({"context": state["context"], "query": state["query"]})
+        prompt = ChatPromptTemplate.from_template(
+            """You are the CNJDS Meetup Knowledge Agent. Based on the following context, answer the user's query.
+            If the context is empty or doesn't contain the answer, state that you couldn't find the information.
+            
+            Context:
+            {context}
+            
+            Query:
+            {query}
+            
+            Answer:"""
+        )
+        chain = prompt | llm | StrOutputParser()
+        response = chain.invoke({"context": state["context"], "query": state["query"]})
+    except Exception as e:
+        print(f"Error during response generation: {e}")
+        response = "Sorry, something went wrong while generating the response."
     return {**state, "response": response}
 
+
 # --- 4. Build and Compile the LangGraph ---
+
 
 print("Building the graph...")
 graph_builder = StateGraph(AgentState)
@@ -175,22 +237,8 @@ graph_builder = StateGraph(AgentState)
 graph_builder.add_node("classify_intent", classify_intent_node)
 graph_builder.add_node("execute_tool", tool_execution_node)
 graph_builder.add_node("generate_response", generate_response_node)
-graph_builder.add_node("simple_response", simple_response_node)
 
 graph_builder.set_entry_point("classify_intent")
-
-# Conditional routing after classification
-def route_after_classification(state: AgentState):
-    intent = state["intent"]
-    if "GREETING_OR_THANKS" in intent:
-        return "simple_response"
-    else:
-        return "execute_tool"
-
-graph_builder.add_conditional_edges(
-    "classify_intent",
-    route_after_classification,
-)
 
 # Conditional routing after tool execution
 def should_generate_response(state: AgentState):
@@ -200,6 +248,7 @@ def should_generate_response(state: AgentState):
     # Otherwise, proceed to the generation step.
     return "generate_response"
 
+graph_builder.add_edge("classify_intent", "execute_tool")
 graph_builder.add_conditional_edges(
     "execute_tool",
     should_generate_response,
@@ -209,10 +258,10 @@ graph_builder.add_conditional_edges(
     }
 )
 graph_builder.add_edge("generate_response", END)
-graph_builder.add_edge("simple_response", END)
 
 agent = graph_builder.compile()
 print("✅ Graph compiled successfully.")
+
 
 # --- 5. Define the Gradio Interface and Logic ---
 
@@ -223,14 +272,32 @@ def respond(message: str, chat_history: List, name: str, email: str) -> str:
     if not name or not email:
         return "Please provide your name and email address before asking a question."
 
-    initial_state = {"query": message, "name": name, "email": email}
+    # Initialize all keys the nodes might expect to avoid KeyErrors.
+    initial_state = {
+        "query": message,
+        "name": name,
+        "email": email,
+        "intent": "",
+        "context": "",
+        "response": "",
+    }
 
-    final_state = None
-    for step in agent.stream(initial_state):
-        # The last state in the stream is the final state
-        final_state = step
-    
-    return final_state.get("response", "Sorry, something went wrong.")
+    try:
+        final_state = None
+        # Stream the graph execution to see the steps
+        for step in agent.stream(initial_state):
+            # The last state in the stream is the final state
+            final_state = step
+
+        # If nothing produced a final state, return a helpful fallback message
+        if final_state and END in final_state:
+             return final_state[END].get("response", "Sorry, I could not find a response.")
+
+        return "Sorry, something went wrong and I could not get a response."
+
+    except Exception as e:
+        print(f"Error during graph execution: {e}")
+        return "Sorry, something went wrong while processing your request."
 
 
 # Build the Gradio UI
@@ -252,9 +319,9 @@ with gr.Blocks(theme=gr.themes.Soft(), title="CNJDS Meetup Knowledge Agent") as 
             ["What is the next meetup?"],
             ["I would like to present on vector databases next month."]
         ],
-        chatbot=gr.Chatbot(height=500, type='messages'), # <-- ADDED type='messages'
+        chatbot=gr.Chatbot(height=500),
+        type="messages",
         textbox=gr.Textbox(placeholder="Ask your question here...", container=False, scale=7),
-        # clear_btn="Clear Chat", # <-- REMOVED THIS LINE
     )
 
 if __name__ == "__main__":
